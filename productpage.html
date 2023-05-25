@@ -81,20 +81,6 @@
     </div>
 
     <script type="text/javascript">
-      let openShopping = document.querySelector('.shopping');
-      let closeShopping = document.querySelector('.closeShopping');
-      let list = document.querySelector('.list');
-      let listCart = document.querySelector('.listCart');
-      let body = document.querySelector('body');
-      let total = document.querySelector('.total');
-      let quantity = document.querySelector('.quantity');
-
-      openShopping.addEventListener('click', ()=>{
-        body.classList.add('active');
-      })
-      closeShopping.addEventListener('click', ()=>{
-        body.classList.remove('active');
-      })
       let products = [
         {
           id: 1,
@@ -134,10 +120,30 @@
         }
       ];
 
+      // Prepopulate with products - can be deleted once connected with the admin side
+      if (!window.localStorage.getItem('products')) window.localStorage.setItem('products', JSON.stringify(products))
+
+      // Fetch products from localStorage - change the 'products' key to the one your admin uses
+      let fetchedProducts = JSON.parse(window.localStorage.getItem('products'))
+
+      let openShopping = document.querySelector('.shopping');
+      let closeShopping = document.querySelector('.closeShopping');
+      let list = document.querySelector('.list');
+      let listCart = document.querySelector('.listCart');
+      let body = document.querySelector('body');
+      let total = document.querySelector('.total');
+      let quantity = document.querySelector('.quantity');
+
+      openShopping.addEventListener('click', ()=>{
+        body.classList.add('active');
+      })
+      closeShopping.addEventListener('click', ()=>{
+        body.classList.remove('active');
+      })
       let listCarts  = [];
 
       function initApp(){
-        products.forEach((value, key) =>{
+        fetchedProducts.forEach((value, key) =>{
           let newDiv = document.createElement('div');
           newDiv.classList.add('item');
           newDiv.innerHTML = `
@@ -156,7 +162,7 @@
       function addToCart(key){
         if(listCarts[key] == null){
           // copy product form list to list Cart
-          listCarts[key] = JSON.parse(JSON.stringify(products[key]));
+          listCarts[key] = JSON.parse(JSON.stringify(fetchedProducts[key]));
           listCarts[key].quantity = 1;
         }
         reloadCart();
@@ -194,7 +200,7 @@
           delete listCarts[key];
         } else {
           listCarts[key].quantity = quantity;
-          listCarts[key].price = quantity * products[key].price;
+          listCarts[key].price = quantity * fetchedProducts[key].price;
         }
         reloadCart();
       }
