@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Product Page</title>
+    <link rel="stylesheet" type="text/css" href="1style.css" />
+  </head>
+  <body class="userbody">
+    <div class="container">
+      <header>
+        <h1 id="checkout"><u>Check out our new product</u></h1>
+        <div class="shopping">
+          <img src="file:///C:/Users/Erah/Downloads/cart-3-svgrepo-com.svg" />
+          <!-- <span class="quantity">0</span> -->
+        </div>
+      </header>
+      <div class="list"></div>
+    </div>
+    <div class="Cart">
+      <h2>Add to Cart</h2>
+      <hr />
+      <ul class="listCart"></ul>
+      <div class="checkOut">
+        <div><p style="font-weight: bold;">Subtotal:</p></div>
+        <div class="total">$0</div>
+        <div class="closeShopping">Close</div>
+        <div></div>
+        <div>
+          <a href="#payment" style="color: white; text-decoration: none;"
+            >Proceed to checkout</a
+          >
+        </div>
+        <div></div>
+        <div></div>
+        <div>
+          <a href=" " style="color: white; text-decoration: none;">Clear</a>
+        </div>
+        <div></div>
+      </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <div class="proceed" id="payment">
+      <h1>Select payment method:</h1>
+      <h4>
+        choose your preferred payment method and tap 'Purchases' for your
+        acquire.
+      </h4>
+      <div class="insidebox">
+        <p style="font-weight: bold;">Apply membership type:</p>
+        <select id="membership">
+          <option value="none">None</option>
+          <option value="silver">Silver</option>
+          <option value="gold">Gold</option>
+          <option value="platinum">Platinum</option>
+        </select>
+        <br />
+        <br />
+        <div style="font-weight: bold;">Item total:</div>
+        <span id="quantity" class="quantity">0</span>
+        <br />
+        <br />
+        <div style="float:left; font-weight: bold;">Subtotal:</div>
+        <br />
+        <div class="total" id="subtotal">$0</div>
+        <p style="font-weight: bold;">Discount%:</p>
+        <p id="discountPercent"></p>
+        <p style="font-weight: bold;">What you'll save:</p>
+        <p id="discountAmount"></p>
+        <p style="font-size: 20px; font-weight: bold;">
+          Grand Total(After discount):
+        </p>
+        <div id="grandTotal" style="font-size:20px" font-weight:bolder;>$0</div>
+        <br /><br />
+        <button id="btnpurchase" onclick="proceed()">Purchases</button>
+      </div>
+      <br /><br /><br />
+    </div>
+
+    <script type="text/javascript">
+      let openShopping = document.querySelector('.shopping');
+      let closeShopping = document.querySelector('.closeShopping');
+      let list = document.querySelector('.list');
+      let listCart = document.querySelector('.listCart');
+      let body = document.querySelector('body');
+      let total = document.querySelector('.total');
+      let quantity = document.querySelector('.quantity');
+
+      openShopping.addEventListener('click', ()=>{
+        body.classList.add('active');
+      })
+      closeShopping.addEventListener('click', ()=>{
+        body.classList.remove('active');
+      })
+      let products = [
+        {
+          id: 1,
+          name: 'LEGO Star Wars Inquisitor Transport Scythe 75336',
+          image: '1.PNG',
+          price: 159.99
+        },
+        {
+          id: 2,
+          name: 'LEGO Marvel Super Heroes Hulk Mech Armor 76241',
+          image: '2.PNG',
+          price: 24.99
+        },
+        {
+          id: 3,
+          name: 'LEGO Super Mario Peachs Garden Balloon Ride Expansion Set 71419',
+          image: '3.PNG',
+          price: 79.99
+        },
+        {
+          id: 4,
+          name: 'LEGO Disney Princess Enchanted Journey 43216',
+          image: '4.PNG',
+          price: 99.99
+        },
+        {
+          id: 5,
+          name: 'LEGO Jurassic World Quetzalcoatlus Plane Ambush 76947',
+          image: '5.PNG',
+          price: 299.99
+        },
+        {
+          id: 6,
+          name: 'LEGO Star Wars AT-TE Walker 75337',
+          image: '6.PNG',
+          price: 79.99
+        }
+      ];
+
+      let listCarts  = [];
+
+      function initApp(){
+        products.forEach((value, key) =>{
+          let newDiv = document.createElement('div');
+          newDiv.classList.add('item');
+          newDiv.innerHTML = `
+            <img src="image/${value.image}">
+            <div class="title">${value.name}</div>
+            <div class="price">${value.price.toLocaleString()}</div>
+            <button onclick="addToCart(${key})">Add To Cart</button>`;
+          list.appendChild(newDiv);
+        })
+      }
+
+      initApp();
+
+      let quantityCount = 0;
+
+      function addToCart(key){
+        if(listCarts[key] == null){
+          // copy product form list to list Cart
+          listCarts[key] = JSON.parse(JSON.stringify(products[key]));
+          listCarts[key].quantity = 1;
+        }
+        reloadCart();
+      }
+
+      function reloadCart(){
+        listCart.innerHTML = '';
+        let count = 0;
+        let subtotal = 0;
+        listCarts.forEach((value, key)=>{
+          if(value != null){
+            subtotal += value.price * value.quantity;
+            count += value.quantity;
+            let newDiv = document.createElement('li');
+            newDiv.innerHTML = `
+              <div><img src="image/${value.image}"/></div>
+              <div>${value.name}</div>
+              <div>${value.price.toLocaleString()}</div>
+              <div>
+                  <button onclick="changeQuantity(${key}, ${value.quantity - 1})">-</button>
+                  <span>${value.quantity}</span>
+                  <button onclick="changeQuantity(${key}, ${value.quantity + 1})">+</button>
+              </div>`;
+            listCart.appendChild(newDiv);
+          }
+        });
+        total.textContent = `$${subtotal.toLocaleString()}`;
+        document.getElementById("subtotal").textContent = `$${subtotal.toLocaleString()}`;
+        quantity.textContent = count;
+      }
+
+      function changeQuantity(key, quantity){
+        if((quantity > 5) || (quantity < 0)) return
+        if(quantity == 0){
+          delete listCarts[key];
+        } else {
+          listCarts[key].quantity = quantity;
+          listCarts[key].price = quantity * products[key].price;
+        }
+        reloadCart();
+      }
+
+      let membershipDropdown = document.querySelector('#membership');
+      membershipDropdown.addEventListener('change', () => {
+        let subtotal = parseFloat(total.textContent.slice(1));
+        let discountPercent = 0;
+        switch(membershipDropdown.value) {
+          case 'silver':
+            discountPercent = 0.05;
+            break;
+          case 'gold':
+            discountPercent = 0.07;
+            break;
+          case 'platinum':
+            discountPercent = 0.09;
+            break;
+          default:
+            discountPercent = 0;
+            break;
+        }
+        let discountAmount = subtotal * discountPercent;
+        let grandTotal = subtotal - discountAmount;
+        document.querySelector('#discountPercent').textContent = (discountPercent * 100) + '%';
+        document.querySelector('#discountAmount').textContent = '$' + discountAmount.toFixed(2);
+        document.querySelector('#grandTotal').textContent = '$' + grandTotal.toFixed(2);
+      });
+
+      function proceed() {
+        var grandTotal = document.getElementById('grandTotal').innerHTML;
+
+        alert('You have purchased items for a total of ' + grandTotal + '.');
+      }
+    </script>
+  </body>
+</html>
