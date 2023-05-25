@@ -27,9 +27,9 @@
         <div class="closeShopping">Close</div>
         <div></div>
         <div>
-          <a href="#payment" style="color: white; text-decoration: none;"
-            >Proceed to checkout</a
-          >
+          <a href="#payment" style="color: white; text-decoration: none;">
+            Proceed to checkout
+          </a>
         </div>
         <div></div>
         <div></div>
@@ -46,8 +46,7 @@
     <div class="proceed" id="payment">
       <h1>Select payment method:</h1>
       <h4>
-        choose your preferred payment method and tap 'Purchases' for your
-        acquire.
+        choose your preferred payment method and tap 'Purchases' for your acquire.
       </h4>
       <div class="insidebox">
         <p style="font-weight: bold;">Apply membership type:</p>
@@ -160,7 +159,7 @@
       let quantityCount = 0;
 
       function addToCart(key){
-        if(listCarts[key] == null){
+        if (listCarts[key] == null){
           // copy product form list to list Cart
           listCarts[key] = JSON.parse(JSON.stringify(fetchedProducts[key]));
           listCarts[key].quantity = 1;
@@ -173,7 +172,7 @@
         let count = 0;
         let subtotal = 0;
         listCarts.forEach((value, key)=>{
-          if(value != null){
+          if (value != null){
             subtotal += value.price * value.quantity;
             count += value.quantity;
             let newDiv = document.createElement('li');
@@ -195,8 +194,8 @@
       }
 
       function changeQuantity(key, quantity){
-        if((quantity > 5) || (quantity < 0)) return
-        if(quantity == 0){
+        if ((quantity > 5) || (quantity < 0)) return
+        if (quantity == 0){
           delete listCarts[key];
         } else {
           listCarts[key].quantity = quantity;
@@ -209,23 +208,23 @@
       membershipDropdown.addEventListener('change', () => {
         let subtotal = parseFloat(total.textContent.slice(1));
         let discountPercent = 0;
-        switch(membershipDropdown.value) {
+        switch (membershipDropdown.value) {
           case 'silver':
-            discountPercent = 0.05;
+            discountPercent = 5;
             break;
           case 'gold':
-            discountPercent = 0.07;
+            discountPercent = 7;
             break;
           case 'platinum':
-            discountPercent = 0.09;
+            discountPercent = 9;
             break;
           default:
             discountPercent = 0;
             break;
         }
-        let discountAmount = subtotal * discountPercent;
+        let discountAmount = subtotal * (discountPercent / 100);
         let grandTotal = subtotal - discountAmount;
-        document.querySelector('#discountPercent').textContent = (discountPercent * 100) + '%';
+        document.querySelector('#discountPercent').textContent = discountPercent + '%';
         document.querySelector('#discountAmount').textContent = '$' + discountAmount.toFixed(2);
         document.querySelector('#grandTotal').textContent = '$' + grandTotal.toFixed(2);
       });
